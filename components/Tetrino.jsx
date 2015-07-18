@@ -20,15 +20,15 @@ export default contain(
     },
 
     render() {
-      const { position } = this.props;
+      const { position: { x, y } } = this.props;
 
       const style = {
         position: 'relative',
         backgroundColor: 'black',
         height: '20px',
         width: '20px',
-        top: position.x + 'px',
-        left: position.y + 'px'
+        top: x + 'px',
+        left: y + 'px'
       };
 
       return (

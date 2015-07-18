@@ -58,13 +58,13 @@
 	
 	var _componentsAppJsx2 = _interopRequireDefault(_componentsAppJsx);
 	
-	var _componentsTetrisCat = __webpack_require__(258);
+	var _fluxTetrisCat = __webpack_require__(264);
 	
-	var _componentsTetrisCat2 = _interopRequireDefault(_componentsTetrisCat);
+	var _fluxTetrisCat2 = _interopRequireDefault(_fluxTetrisCat);
 	
 	var mountNode = document.getElementById('tetris');
 	
-	(0, _thundercatsReact.Render)((0, _componentsTetrisCat2['default'])(), _react2['default'].createElement(_componentsAppJsx2['default'], null), mountNode).subscribe(function () {
+	(0, _thundercatsReact.Render)((0, _fluxTetrisCat2['default'])(), _react2['default'].createElement(_componentsAppJsx2['default'], null), mountNode).subscribe(function () {
 	  console.log('rendered');
 	}, function (err) {
 	  console.log('react errored', err);
@@ -20461,11 +20461,15 @@
 	
 	var _rx2 = _interopRequireDefault(_rx);
 	
-	var _thundercatsReact = __webpack_require__(168);
-	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactKeybinding = __webpack_require__(270);
+	
+	var _reactKeybinding2 = _interopRequireDefault(_reactKeybinding);
+	
+	var _thundercatsReact = __webpack_require__(168);
 	
 	var _Field = __webpack_require__(160);
 	
@@ -20477,12 +20481,27 @@
 	
 	exports['default'] = (0, _thundercatsReact.contain)({
 	  store: 'tetrisStore',
-	  actions: 'tetrisActions'
+	  actions: ['tetrisActions', 'tetrinoActions']
 	}, _react2['default'].createClass({
 	  displayName: 'Tetris',
+	  mixins: [_reactKeybinding2['default']],
 	
 	  propTypes: {
-	    tetrisActions: _react.PropTypes.object
+	    tetrisActions: _react.PropTypes.object,
+	    tetrinoActions: _react.PropTypes.object
+	  },
+	
+	  keybindings: {
+	    'w': 'rotate',
+	    'a': 'moveLeft',
+	    's': 'moveDown',
+	    'd': 'moveRight'
+	  },
+	
+	  keybinding: function keybinding(e, action) {
+	    var actions = this.props.tetrinoActions;
+	
+	    actions[action]();
 	  },
 	
 	  componentDidMount: function componentDidMount() {
@@ -31269,20 +31288,32 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	exports['default'] = _react2['default'].createClass({
+	var _thundercatsReact = __webpack_require__(168);
+	
+	exports['default'] = (0, _thundercatsReact.contain)({
+	  store: 'fieldStore'
+	}, _react2['default'].createClass({
 	  displayName: 'Field',
 	
 	  propTypes: {
-	    children: _react.PropTypes.node
+	    children: _react.PropTypes.node,
+	    width: _react.PropTypes.string,
+	    height: _react.PropTypes.string
 	  },
 	
 	  render: function render() {
+	    var _props = this.props;
+	    var height = _props.height;
+	    var width = _props.width;
+	
+	    // each column is 20px and there are 20
+	    // each row is 20px and there are 30
 	    var styling = {
 	      borderColor: 'black',
 	      borderWidth: '2px',
 	      borderStyle: 'solid',
-	      width: '400px',
-	      height: '600px'
+	      width: width,
+	      height: height
 	    };
 	
 	    return _react2['default'].createElement(
@@ -31293,7 +31324,7 @@
 	      this.props.children
 	    );
 	  }
-	});
+	}));
 	module.exports = exports['default'];
 
 /***/ },
@@ -31330,15 +31361,17 @@
 	  componentDidMount: function componentDidMount() {},
 	
 	  render: function render() {
-	    var position = this.props.position;
+	    var _props$position = this.props.position;
+	    var x = _props$position.x;
+	    var y = _props$position.y;
 	
 	    var style = {
 	      position: 'relative',
 	      backgroundColor: 'black',
 	      height: '20px',
 	      width: '20px',
-	      top: position.x + 'px',
-	      left: position.y + 'px'
+	      top: x + 'px',
+	      left: y + 'px'
 	    };
 	
 	    return _react2['default'].createElement('div', { style: style });
@@ -37547,7 +37580,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 258 */
+/* 258 */,
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37560,25 +37599,30 @@
 	
 	var _thundercats = __webpack_require__(178);
 	
-	var _TetrisStore = __webpack_require__(262);
+	var _FieldStore = __webpack_require__(269);
+	
+	var _FieldStore2 = _interopRequireDefault(_FieldStore);
+	
+	var _TetrisStore = __webpack_require__(265);
 	
 	var _TetrisStore2 = _interopRequireDefault(_TetrisStore);
 	
-	var _TetrisActions = __webpack_require__(263);
+	var _TetrisActions = __webpack_require__(266);
 	
 	var _TetrisActions2 = _interopRequireDefault(_TetrisActions);
 	
-	var _TetrinoActions = __webpack_require__(261);
+	var _TetrinoActions = __webpack_require__(267);
 	
 	var _TetrinoActions2 = _interopRequireDefault(_TetrinoActions);
 	
-	var _TetrinoState = __webpack_require__(260);
+	var _TetrinoState = __webpack_require__(268);
 	
 	var _TetrinoState2 = _interopRequireDefault(_TetrinoState);
 	
 	exports['default'] = (0, _thundercats.Cat)().refs({ displayName: 'TetrisCat' }).init(function (_ref) {
 	  var instance = _ref.instance;
 	
+	  instance.register(_FieldStore2['default']);
 	  instance.register(_TetrisActions2['default']);
 	  instance.register(_TetrisStore2['default'], null, instance);
 	  instance.register(_TetrinoActions2['default']);
@@ -37587,96 +37631,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 259 */,
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _thundercats = __webpack_require__(178);
-	
-	var _objectAssign = __webpack_require__(162);
-	
-	var _objectAssign2 = _interopRequireDefault(_objectAssign);
-	
-	var transformer = _thundercats.Store.transformer;
-	exports['default'] = (0, _thundercats.Store)({
-	  position: { x: 0, y: 0 },
-	  atBottom: false
-	}).refs({ displayName: 'TetrinoState' }).init(function (_ref) {
-	  var instance = _ref.instance;
-	  var args = _ref.args;
-	
-	  var _args = _slicedToArray(args, 1);
-	
-	  var tetrisCat = _args[0];
-	
-	  var tetrinoActions = tetrisCat.getActions('tetrinoActions');
-	  var tetrisStore = tetrisCat.getStore('tetrisStore');
-	
-	  instance.register(tetrisStore.map(function () {
-	    return {
-	      transform: function transform(tetrinoState) {
-	        if (tetrinoState.atBottom) {
-	          return tetrinoState;
-	        }
-	        var newPosition = {
-	          x: tetrinoState.position.x + 20,
-	          y: tetrinoState.position.y
-	        };
-	
-	        var bottomState = { atBottom: tetrinoState.atBottom };
-	
-	        if (newPosition.x >= 580) {
-	          bottomState = { atBottom: true };
-	        }
-	
-	        return (0, _objectAssign2['default'])({}, tetrinoState, { position: newPosition }, bottomState);
-	      }
-	    };
-	  }));
-	
-	  instance.register(transformer(tetrinoActions.moveBlock));
-	});
-	module.exports = exports['default'];
-
-/***/ },
-/* 261 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _thundercats = __webpack_require__(178);
-	
-	exports['default'] = (0, _thundercats.Actions)({
-	  moveBlock: function moveBlock() {
-	    return function (oldSate) {
-	      var x = oldSate.x;
-	      var y = oldSate.y;
-	
-	      return {
-	        x: x * 20 + 'px',
-	        y: y
-	      };
-	    };
-	  }
-	}).refs({ displayName: 'TetrinoActions' });
-	module.exports = exports['default'];
-
-/***/ },
-/* 262 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37704,7 +37659,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 263 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37729,6 +37684,539 @@
 	  }
 	}).refs({ displayName: 'TetrisActions' });
 	module.exports = exports['default'];
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _objectAssign = __webpack_require__(162);
+	
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+	
+	var _thundercats = __webpack_require__(178);
+	
+	var _constants = __webpack_require__(276);
+	
+	exports['default'] = (0, _thundercats.Actions)({
+	  moveDown: function moveDown() {
+	    return function (oldState) {
+	      var _oldState$position = oldState.position;
+	      var x = _oldState$position.x;
+	      var y = _oldState$position.y;
+	
+	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x + _constants.SCALE, y: y } });
+	    };
+	  },
+	
+	  moveRight: function moveRight() {
+	    return function (oldState) {
+	      var _oldState$position2 = oldState.position;
+	      var x = _oldState$position2.x;
+	      var y = _oldState$position2.y;
+	
+	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y + _constants.SCALE } });
+	    };
+	  },
+	
+	  moveLeft: function moveLeft() {
+	    return function (oldState) {
+	      var _oldState$position3 = oldState.position;
+	      var x = _oldState$position3.x;
+	      var y = _oldState$position3.y;
+	
+	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y - _constants.SCALE } });
+	    };
+	  }
+	}).refs({ displayName: 'TetrinoActions' });
+	module.exports = exports['default'];
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _thundercats = __webpack_require__(178);
+	
+	var _objectAssign = __webpack_require__(162);
+	
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+	
+	var fromMany = _thundercats.Store.fromMany;
+	var transformer = _thundercats.Store.transformer;
+	exports['default'] = (0, _thundercats.Store)({
+	  position: { x: 0, y: 0 },
+	  atBottom: false
+	}).refs({ displayName: 'TetrinoState' }).init(function (_ref) {
+	  var instance = _ref.instance;
+	  var args = _ref.args;
+	
+	  var _args = _slicedToArray(args, 1);
+	
+	  var tetrisCat = _args[0];
+	
+	  var tetrinoActions = tetrisCat.getActions('tetrinoActions');
+	  var tetrisStore = tetrisCat.getStore('tetrisStore');
+	  var fieldStore = tetrisCat.getStore('fieldStore');
+	
+	  instance.register(tetrisStore.withLatestFrom(fieldStore, function (tetrisStae, fieldState) {
+	    return fieldState;
+	  }).map(function (fieldState) {
+	    return {
+	      transform: function transform(tetrinoState) {
+	        if (tetrinoState.atBottom) {
+	          return tetrinoState;
+	        }
+	        var newPosition = {
+	          x: tetrinoState.position.x + 20,
+	          y: tetrinoState.position.y
+	        };
+	
+	        var bottomState = { atBottom: tetrinoState.atBottom };
+	
+	        if (newPosition.x >= (fieldState.h - 1) * 20) {
+	          bottomState = { atBottom: true };
+	        }
+	
+	        return (0, _objectAssign2['default'])({}, tetrinoState, { position: newPosition }, bottomState);
+	      }
+	    };
+	  }));
+	
+	  instance.register(fromMany(transformer(tetrinoActions.moveDown), transformer(tetrinoActions.moveLeft), transformer(tetrinoActions.moveRight)));
+	});
+	module.exports = exports['default'];
+
+/***/ },
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _rx = __webpack_require__(158);
+	
+	var _rx2 = _interopRequireDefault(_rx);
+	
+	var _thundercats = __webpack_require__(178);
+	
+	var h = 30,
+	    w = 20;
+	
+	function create2DArray(x, y) {
+	  return Array.apply(null, new Array(y)).map(function () {
+	    return Array.apply(null, new Array(x)).map(function () {
+	      return 0;
+	    });
+	  });
+	}
+	
+	var initialValue = {
+	  height: h * 20 + 'px',
+	  width: w * 30 + 'px',
+	  h: h,
+	  w: w,
+	  fieldArray: create2DArray(h, w)
+	};
+	
+	exports['default'] = (0, _thundercats.Store)(initialValue).refs({ displayName: 'FieldStore' }).init(function (_ref) {
+	  var instance = _ref.instance;
+	
+	  instance.register(_rx2['default'].Observable.interval(1000).map({
+	    transform: _rx2['default'].helpers.identity
+	  }));
+	});
+	module.exports = exports['default'];
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	  parseEvents = __webpack_require__(271),
+	  isInput = __webpack_require__(274),
+	  match = __webpack_require__(275);
+	
+	/**
+	 * A React mixin that provides keybinding support for components
+	 */
+	var Keybinding = {
+	
+	  /**
+	   * Housekeeping to pass around a single array of all
+	   * currently-active keybinding objects.
+	   */
+	  childContextTypes: {
+	    __keybindings: React.PropTypes.array
+	  },
+	  contextTypes: {
+	    __keybindings: React.PropTypes.array
+	  },
+	  getChildContext: function() {
+	    return { __keybindings: this.__getKeybindings() };
+	  },
+	  __getKeybindings: function() {
+	    this.__keybindings = this.__keybindings ||
+	      (this.context && this.context.__keybindings) || [];
+	    return this.__keybindings;
+	  },
+	
+	  /**
+	   * This is the only method meant to be exposed to the user: it
+	   * returns the global keybinding index for the purposes of documentation
+	   * generation.
+	   */
+	  getAllKeybindings: function() {
+	    return this.__getKeybindings();
+	  },
+	
+	  /**
+	   * Internal method: avoids firing keybindings in textareas,
+	   * figures out if they match any of the bindings from this component,
+	   * and then either fires an inline method or the .keybinding() method.
+	   */
+	  __keybinding: function(event) {
+	    if (isInput(event)) return;
+	    for (var i = 0; i < this.matchers.length; i++) {
+	      if (match(this.matchers[i].expectation, event)) {
+	        if (typeof this.matchers[i].action === 'function') {
+	          this.matchers[i].action.apply(this, event);
+	        } else {
+	          if (typeof this.keybinding !== 'function') {
+	            throw new Error('non-function keybinding action given but no .keybinding method found on component');
+	          }
+	          this.keybinding(event, this.matchers[i].action);
+	        }
+	      }
+	    }
+	  },
+	
+	  /**
+	   * When the component mounts, bind our event listener and
+	   * add our keybindings to the global index.
+	   */
+	  componentDidMount: function() {
+	    if (this.keybindings !== undefined) {
+	      this.matchers = parseEvents(this.keybindings, !!this.keybindingsPlatformAgnostic);
+	      document.addEventListener('keydown', this.__keybinding);
+	      this.__getKeybindings().push(this.keybindings);
+	    }
+	  },
+	
+	  /**
+	   * When the component unmounts, unbind our event listener and
+	   * remove our keybindings from the global index.
+	   */
+	  componentWillUnmount: function() {
+	    if (this.keybindings !== undefined) {
+	      document.removeEventListener('keydown', this.__keybinding);
+	      this.__getKeybindings()
+	        .splice(this.__getKeybindings().indexOf(this.keybindings), 1);
+	    }
+	  }
+	};
+	
+	module.exports = Keybinding;
+
+
+/***/ },
+/* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var parseCode = __webpack_require__(272);
+	
+	/**
+	 * Given an object of mappings from
+	 * keybinding strings to actions,
+	 * return an array of parsed keystroke
+	 * expectations and actions.
+	 * @param {Object} keybindings
+	 * @param {Boolean} platformAgnostic convert platform specific keybindgs
+	 * @returns {Array<Object>} matchers
+	 */
+	module.exports = function(keybindings, platformAgnostic) {
+	  var matchers = [];
+	  for (var code in keybindings) {
+	    var event = parseCode(code);
+	    matchers.push({
+	      expectation: event,
+	      action: keybindings[code]
+	    });
+	    if (platformAgnostic && (event.metaKey ? !event.ctrlKey : event.ctrlKey)) {
+	      // meta xor ctrl
+	      matchers.push({
+	        expectation: {
+	          keyCode: event.keyCode,
+	          shiftKey: event.shiftKey,
+	          ctrlKey: !event.ctrlKey,
+	          altKey: event.altKey,
+	          metaKey: !event.metaKey
+	        },
+	        action: keybindings[code]
+	      });
+	    }
+	  }
+	  return matchers;
+	};
+
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var codes = __webpack_require__(273);
+	
+	/**
+	 * parse a key code given as a string
+	 * into an object of expectations used
+	 * to match keystrokes.
+	 * @param {String} input a string of a keycode combination
+	 * @returns {Object} expectations
+	 * @example
+	 * parseCode('a');
+	 */
+	module.exports = function parseCode(input) {
+	
+	    var code = input.toLowerCase()
+	        .match(/(?:(?:[^+⇧⌃⌥⌘])+|[⇧⌃⌥⌘]|\+\+|^\+$)/g);
+	
+	    var event = {
+	        keyCode: 0,
+	        shiftKey: false,
+	        ctrlKey: false,
+	        altKey: false,
+	        metaKey: false
+	    };
+	
+	    for (var i = 0; i < code.length; i++) {
+	        // Normalise matching errors
+	        if (code[i] === '++') code[i] = '+';
+	
+	        if (code[i] in codes.modifierCodes) {
+	            event[codes.modifierProperties[codes.modifierCodes[code[i]]]] = true;
+	        } else if (code[i] in codes.shiftedKeys) {
+	            event.keyCode = codes.shiftedKeys[code[i]];
+	            event.shiftKey = true;
+	        } else if (code[i] in codes.keyCodes) {
+	            event.keyCode = codes.keyCodes[code[i]];
+	        }
+	    }
+	
+	    return event;
+	};
+
+
+/***/ },
+/* 273 */
+/***/ function(module, exports) {
+
+	/**
+	 * Keycodes, modifier codes,
+	 * and anything else that can be typed,
+	 * compiled into a big lookup table.
+	 */
+	module.exports.modifierCodes = {
+	    // Shift key, ⇧
+	    '⇧': 16, shift: 16,
+	    // CTRL key, on Mac: ⌃
+	    '⌃': 17, ctrl: 17,
+	    // ALT key, on Mac: ⌥ (Alt)
+	    '⌥': 18, alt: 18, option: 18,
+	    // META, on Mac: ⌘ (CMD), on Windows (Win), on Linux (Super)
+	    '⌘': 91, meta: 91, cmd: 91, 'super': 91, win: 91
+	};
+	
+	module.exports.modifierProperties = {
+	    16: 'shiftKey',
+	    17: 'ctrlKey',
+	    18: 'altKey',
+	    91: 'metaKey'
+	};
+	
+	module.exports.keyCodes = {
+	    // Backspace key, on Mac: ⌫ (Backspace)
+	    '⌫': 8, backspace: 8,
+	    // Tab Key, on Mac: ⇥ (Tab), on Windows ⇥⇥
+	    '⇥': 9, '⇆': 9, tab: 9,
+	    // Return key, ↩
+	    '↩': 13, 'return': 13, enter: 13, '⌅': 13,
+	    // Pause/Break key
+	    'pause': 19, 'pause-break': 19,
+	    // Caps Lock key, ⇪
+	    '⇪': 20, caps: 20, 'caps-lock': 20,
+	    // Escape key, on Mac: ⎋, on Windows: Esc
+	    '⎋': 27, escape: 27, esc: 27,
+	    // Space key
+	    space: 32,
+	    // Page-Up key, or pgup, on Mac: ↖
+	    '↖': 33, pgup: 33, 'page-up': 33,
+	    // Page-Down key, or pgdown, on Mac: ↘
+	    '↘': 34, pgdown: 34, 'page-down': 34,
+	    // END key, on Mac: ⇟
+	    '⇟': 35, end: 35,
+	    // HOME key, on Mac: ⇞
+	    '⇞': 36, home: 36,
+	    // Insert key, or ins
+	    ins: 45, insert: 45,
+	    // Delete key, on Mac: ⌦ (Delete)
+	    '⌦': 46, del: 46, 'delete': 46,
+	    // Left Arrow Key, or ←
+	    '←': 37, left: 37, 'arrow-left': 37,
+	    // Up Arrow Key, or ↑
+	    '↑': 38, up: 38, 'arrow-up': 38,
+	    // Right Arrow Key, or →
+	    '→': 39, right: 39, 'arrow-right': 39,
+	    // Up Arrow Key, or ↓
+	    '↓': 40, down: 40, 'arrow-down': 40,
+	    // odities, printing characters that come out wrong:
+	    // Num-Multiply, or *
+	    '*': 106, star: 106, asterisk: 106, multiply: 106,
+	    // Num-Plus or +
+	    '+': 107, 'plus': 107,
+	    // Num-Subtract, or -
+	    '-': 109, subtract: 109,
+	    // Semicolon
+	    ';': 186, semicolon:186,
+	    // = or equals
+	    '=': 187, 'equals': 187,
+	    // Comma, or ,
+	    ',': 188, comma: 188,
+	    //'-': 189, //???
+	    // Period, or ., or full-stop
+	    '.': 190, period: 190, 'full-stop': 190,
+	    // Slash, or /, or forward-slash
+	    '/': 191, slash: 191, 'forward-slash': 191,
+	    // Tick, or `, or back-quote
+	    '`': 192, tick: 192, 'back-quote': 192,
+	    // Open bracket, or [
+	    '[': 219, 'open-bracket': 219,
+	    // Back slash, or \
+	    '\\': 220, 'back-slash': 220,
+	    // Close backet, or ]
+	    ']': 221, 'close-bracket': 221,
+	    // Apostrophe, or Quote, or '
+	    '\'': 222, quote: 222, apostrophe: 222
+	};
+	
+	// NUMPAD 0-9
+	var i = 95, n = 0;
+	while (++i < 106) {
+	    module.exports.keyCodes['num-' + n] = i;
+	    ++n;
+	}
+	
+	// 0-9
+	i = 47; n = 0;
+	while (++i < 58) {
+	    module.exports.keyCodes[n] = i; ++n;
+	}
+	
+	// F1-F25
+	i = 111; n = 1;
+	while (++i < 136) {
+	    module.exports.keyCodes['f' + n] = i; ++n;
+	}
+	
+	// ;-a-z
+	i = 63;
+	while (++i < 91) {
+	    module.exports.keyCodes[String.fromCharCode(i).toLowerCase()] = i;
+	}
+	
+	module.exports.shiftedKeys = {};
+	
+	// these non-letter keys imply a shift key on US keyboards
+	[[ '~', '`' ],
+	 [ '!', '1' ],
+	 [ '@', '2' ],
+	 [ '#', '3' ],
+	 [ '$', '4' ],
+	 [ '%', '5' ],
+	 [ '^', '6' ],
+	 [ '&', '7' ],
+	 [ '*', '8' ],
+	 [ '(', '9' ],
+	 [ ')', '0' ],
+	 [ '_', '-' ],
+	 [ '+', '=' ],
+	 [ ':', ';' ],
+	 [ '\"', '\'' ],
+	 [ '<', ',' ],
+	 [ '>', '.' ],
+	 [ '?', '/' ]
+	].forEach(function(key) {
+	  module.exports.shiftedKeys[key[0]] = module.exports.keyCodes[key[1]];
+	});
+
+
+/***/ },
+/* 274 */
+/***/ function(module, exports) {
+
+	var blacklist = {
+	  INPUT: true,
+	  SELECT: true,
+	  TEXTAREA: true
+	};
+	
+	module.exports = function(event) {
+	  return blacklist[event.target.tagName];
+	};
+
+
+/***/ },
+/* 275 */
+/***/ function(module, exports) {
+
+	/**
+	 * Verify if an event checks all the boxes
+	 * of an expectation generated by `parse_event.js`
+	 * @param {Object} expectation
+	 * @param {Event} DOMEvent
+	 * @returns {boolean} whether the event matches
+	 */
+	module.exports = function(expectation, event) {
+	    for (var p in expectation) {
+	        if (event[p] != expectation[p]) { return false; }
+	    }
+	    return true;
+	};
+
+
+/***/ },
+/* 276 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = {
+	  SCALE: 20
+	};
+	module.exports = exports["default"];
 
 /***/ }
 /******/ ]);

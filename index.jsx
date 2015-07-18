@@ -1,7 +1,7 @@
 import React from 'react';
 import { Render } from 'thundercats-react';
 import App from './components/App.jsx';
-import TetrisCat from './components/TetrisCat';
+import TetrisCat from './flux/TetrisCat';
 
 const mountNode = document.getElementById('tetris');
 

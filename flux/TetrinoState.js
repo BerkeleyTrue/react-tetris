@@ -1,7 +1,7 @@
 import { Store } from 'thundercats';
 import assign from 'object.assign';
 
-const { transformer } = Store;
+const { fromMany, transformer } = Store;
 
 export default Store({
   position: { x: 0, y: 0},
@@ -12,8 +12,12 @@ export default Store({
     const [tetrisCat] = args;
     const tetrinoActions = tetrisCat.getActions('tetrinoActions');
     const tetrisStore = tetrisCat.getStore('tetrisStore');
+    const fieldStore = tetrisCat.getStore('fieldStore');
 
-    instance.register(tetrisStore.map(() => {
+    instance.register(
+      tetrisStore.withLatestFrom(fieldStore, ( tetrisStae, fieldState) => {
+        return fieldState;
+      }).map((fieldState) => {
       return {
         transform: (tetrinoState) => {
           if (tetrinoState.atBottom) {
@@ -26,7 +30,7 @@ export default Store({
 
           let bottomState = { atBottom: tetrinoState.atBottom };
 
-          if (newPosition.x >= 580) {
+          if (newPosition.x >= (fieldState.h - 1) * 20) {
             bottomState = { atBottom: true };
           }
 
@@ -40,5 +44,9 @@ export default Store({
       };
     }));
 
-    instance.register(transformer(tetrinoActions.moveBlock));
+    instance.register(fromMany(
+      transformer(tetrinoActions.moveDown),
+      transformer(tetrinoActions.moveLeft),
+      transformer(tetrinoActions.moveRight)
+    ));
   });

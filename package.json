@@ -21,6 +21,7 @@
     "node-libs-browser": "^0.5.2",
     "object.assign": "^3.0.1",
     "react": "^0.13.3",
+    "react-keybinding": "^2.0.0",
     "rx": "2.5.3",
     "thundercats": "^2.0.0-rc9",
     "thundercats-react": "0.0.4",
