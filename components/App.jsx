@@ -1,41 +1,37 @@
 import Rx from 'rx';
-import React from 'react';
+import { contain } from 'thundercats-react';
+import React, { PropTypes } from 'react';
 import Field from './Field';
 import Tetrino from './Tetrino';
 
-const ticker = Rx.Observable
-  .interval(16)
-  .timeInterval();
-
-export default React.createClass({
-  displayName: 'Tetris',
-  getInitialState() {
-    return {
-      x: 0
-    };
+export default contain(
+  {
+    store: 'tetrisStore',
+    actions: 'tetrisActions'
   },
+  React.createClass({
+    displayName: 'Tetris',
 
-  componentDidMount() {
-    ticker.subscribe(
-      (count) => {
-        this.setState({ x: count.value });
-      }
-    );
-  },
+    propTypes: {
+      tetrisActions: PropTypes.object
+    },
 
-  render() {
-    const { x } = this.state;
-    const blockPosition = {
-      top: x + 'px',
-      left: '10px'
-    };
+    componentDidMount() {
+      const { tetrisActions } = this.props;
 
-    return (
-      <div>
-        <Field>
-          <Tetrino blockPosition={ blockPosition } />
-        </Field>
-      </div>
-    );
-  }
-});
+      this.tickerSubscription = Rx.Observable
+        .interval(150)
+        .subscribe(() => { tetrisActions.tick(); });
+    },
+
+    render() {
+      return (
+        <div>
+          <Field>
+            <Tetrino />
+          </Field>
+        </div>
+      );
+    }
+  })
+);

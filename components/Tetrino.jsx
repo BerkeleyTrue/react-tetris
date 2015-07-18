@@ -1,7 +1,6 @@
-import Rx from 'rx';
 import React, { PropTypes } from 'react';
 import { contain } from 'thundercats-react';
-import assign from 'object.assign';
+// import assign from 'object.assign';
 
 
 export default contain(
@@ -13,8 +12,8 @@ export default contain(
     displayName: 'Tetrino',
 
     propTypes: {
-      position: PropTypes.object,
-      tetrinoActions: PropTypes.object
+      tetrinoActions: PropTypes.object,
+      position: PropTypes.object
     },
 
     componentDidMount() {
@@ -27,11 +26,13 @@ export default contain(
         position: 'relative',
         backgroundColor: 'black',
         height: '20px',
-        width: '20px'
+        width: '20px',
+        top: position.x + 'px',
+        left: position.y + 'px'
       };
 
       return (
-        <div style={ assign(style, position) }>
+        <div style={ style }>
         </div>
       );
     }

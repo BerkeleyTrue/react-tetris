@@ -20461,6 +20461,8 @@
 	
 	var _rx2 = _interopRequireDefault(_rx);
 	
+	var _thundercatsReact = __webpack_require__(168);
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -20473,43 +20475,36 @@
 	
 	var _Tetrino2 = _interopRequireDefault(_Tetrino);
 	
-	var ticker = _rx2['default'].Observable.interval(16).timeInterval();
-	
-	exports['default'] = _react2['default'].createClass({
+	exports['default'] = (0, _thundercatsReact.contain)({
+	  store: 'tetrisStore',
+	  actions: 'tetrisActions'
+	}, _react2['default'].createClass({
 	  displayName: 'Tetris',
-	  getInitialState: function getInitialState() {
-	    return {
-	      x: 0
-	    };
+	
+	  propTypes: {
+	    tetrisActions: _react.PropTypes.object
 	  },
 	
 	  componentDidMount: function componentDidMount() {
-	    var _this = this;
+	    var tetrisActions = this.props.tetrisActions;
 	
-	    ticker.subscribe(function (count) {
-	      _this.setState({ x: count.value });
+	    this.tickerSubscription = _rx2['default'].Observable.interval(150).subscribe(function () {
+	      tetrisActions.tick();
 	    });
 	  },
 	
 	  render: function render() {
-	    var x = this.state.x;
-	
-	    var blockPosition = {
-	      top: x + 'px',
-	      left: '10px'
-	    };
-	
 	    return _react2['default'].createElement(
 	      'div',
 	      null,
 	      _react2['default'].createElement(
 	        _Field2['default'],
 	        null,
-	        _react2['default'].createElement(_Tetrino2['default'], { blockPosition: blockPosition })
+	        _react2['default'].createElement(_Tetrino2['default'], null)
 	      )
 	    );
 	  }
-	});
+	}));
 	module.exports = exports['default'];
 
 /***/ },
@@ -31313,19 +31308,13 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _rx = __webpack_require__(158);
-	
-	var _rx2 = _interopRequireDefault(_rx);
-	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
 	var _thundercatsReact = __webpack_require__(168);
 	
-	var _objectAssign = __webpack_require__(162);
-	
-	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+	// import assign from 'object.assign';
 	
 	exports['default'] = (0, _thundercatsReact.contain)({
 	  store: 'TetrinoState',
@@ -31334,8 +31323,8 @@
 	  displayName: 'Tetrino',
 	
 	  propTypes: {
-	    position: _react.PropTypes.object,
-	    tetrinoActions: _react.PropTypes.object
+	    tetrinoActions: _react.PropTypes.object,
+	    position: _react.PropTypes.object
 	  },
 	
 	  componentDidMount: function componentDidMount() {},
@@ -31347,10 +31336,12 @@
 	      position: 'relative',
 	      backgroundColor: 'black',
 	      height: '20px',
-	      width: '20px'
+	      width: '20px',
+	      top: position.x + 'px',
+	      left: position.y + 'px'
 	    };
 	
-	    return _react2['default'].createElement('div', { style: (0, _objectAssign2['default'])(style, position) });
+	    return _react2['default'].createElement('div', { style: style });
 	  }
 	}));
 	module.exports = exports['default'];
@@ -37569,6 +37560,14 @@
 	
 	var _thundercats = __webpack_require__(178);
 	
+	var _TetrisStore = __webpack_require__(262);
+	
+	var _TetrisStore2 = _interopRequireDefault(_TetrisStore);
+	
+	var _TetrisActions = __webpack_require__(263);
+	
+	var _TetrisActions2 = _interopRequireDefault(_TetrisActions);
+	
 	var _TetrinoActions = __webpack_require__(261);
 	
 	var _TetrinoActions2 = _interopRequireDefault(_TetrinoActions);
@@ -37577,9 +37576,11 @@
 	
 	var _TetrinoState2 = _interopRequireDefault(_TetrinoState);
 	
-	exports['default'] = (0, _thundercats.Cat)().init(function (_ref) {
+	exports['default'] = (0, _thundercats.Cat)().refs({ displayName: 'TetrisCat' }).init(function (_ref) {
 	  var instance = _ref.instance;
 	
+	  instance.register(_TetrisActions2['default']);
+	  instance.register(_TetrisStore2['default'], null, instance);
 	  instance.register(_TetrinoActions2['default']);
 	  instance.register(_TetrinoState2['default'], null, instance);
 	});
@@ -37598,10 +37599,19 @@
 	
 	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
 	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
 	var _thundercats = __webpack_require__(178);
 	
+	var _objectAssign = __webpack_require__(162);
+	
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+	
 	var transformer = _thundercats.Store.transformer;
-	exports['default'] = (0, _thundercats.Store)().refs({ displayName: 'TetrinoState' }).init(function (_ref) {
+	exports['default'] = (0, _thundercats.Store)({
+	  position: { x: 0, y: 0 },
+	  atBottom: false
+	}).refs({ displayName: 'TetrinoState' }).init(function (_ref) {
 	  var instance = _ref.instance;
 	  var args = _ref.args;
 	
@@ -37610,6 +37620,30 @@
 	  var tetrisCat = _args[0];
 	
 	  var tetrinoActions = tetrisCat.getActions('tetrinoActions');
+	  var tetrisStore = tetrisCat.getStore('tetrisStore');
+	
+	  instance.register(tetrisStore.map(function () {
+	    return {
+	      transform: function transform(tetrinoState) {
+	        if (tetrinoState.atBottom) {
+	          return tetrinoState;
+	        }
+	        var newPosition = {
+	          x: tetrinoState.position.x + 20,
+	          y: tetrinoState.position.y
+	        };
+	
+	        var bottomState = { atBottom: tetrinoState.atBottom };
+	
+	        if (newPosition.x >= 580) {
+	          bottomState = { atBottom: true };
+	        }
+	
+	        return (0, _objectAssign2['default'])({}, tetrinoState, { position: newPosition }, bottomState);
+	      }
+	    };
+	  }));
+	
 	  instance.register(transformer(tetrinoActions.moveBlock));
 	});
 	module.exports = exports['default'];
@@ -37639,6 +37673,61 @@
 	    };
 	  }
 	}).refs({ displayName: 'TetrinoActions' });
+	module.exports = exports['default'];
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+	
+	var _thundercats = __webpack_require__(178);
+	
+	var transformer = _thundercats.Store.transformer;
+	exports['default'] = (0, _thundercats.Store)({ tick: 0 }).refs({ displayName: 'TetrisStore' }).init(function (_ref) {
+	  var instance = _ref.instance;
+	  var args = _ref.args;
+	
+	  var _args = _slicedToArray(args, 1);
+	
+	  var tetrisCat = _args[0];
+	
+	  var tetrisActions = tetrisCat.getActions('tetrisActions');
+	  instance.register(transformer(tetrisActions.tick));
+	});
+	module.exports = exports['default'];
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _thundercats = __webpack_require__(178);
+	
+	var _objectAssign = __webpack_require__(162);
+	
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+	
+	exports['default'] = (0, _thundercats.Actions)({
+	  tick: function tick() {
+	    return function (gameState) {
+	      return (0, _objectAssign2['default'])({}, gameState, { tick: gameState.tick + 1 });
+	    };
+	  }
+	}).refs({ displayName: 'TetrisActions' });
 	module.exports = exports['default'];
 
 /***/ }
