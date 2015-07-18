@@ -2,7 +2,11 @@ var bs = require('browser-sync').create();
 
 // .init starts the server
 bs.init({
-    server: './'
+  server: './',
+  files: [
+    './bundle.js',
+    './index.html'
+  ]
 });
 
 // Now call methods on bs instead of the
