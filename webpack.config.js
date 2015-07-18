@@ -2,19 +2,18 @@ var path = require('path');
 
 module.exports = {
   devtool: 'sourcemap',
-  entry: './client',
+  entry: './index.jsx',
   output: {
     filename: 'bundle.js',
-    path: path.join(__dirname, '/public/js'),
-    publicPath: 'public/'
+    path: path.join(__dirname, './'),
+    publicPath: './'
   },
   module: {
     loaders: [
       {
         test: /\.jsx?$/,
         include: [
-          path.join(__dirname, 'client/'),
-          path.join(__dirname, 'common/')
+          path.join(__dirname, './')
         ],
         loaders: [
           'babel-loader'
