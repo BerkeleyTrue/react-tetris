@@ -26,6 +26,11 @@ function getBottomBound(num) {
   return num >= h - 1 ? h - 1 : num;
 }
 
+function updateArray(arr, y, x, value) {
+  arr[getBottomBound(y)][getVerticalBound(x)] = value;
+  return arr;
+}
+
 const initialValue = {
   height: (h * 20) + 'px',
   width: (w * 30) + 'px',
@@ -48,18 +53,18 @@ export default Store(initialValue)
     instance.register(transformer(tetrinoStore.map(
       (tetrinoState) => {
         return (fieldState) => {
-          const { fieldArray } = fieldState;
+          let { fieldArray } = fieldState;
           const { position: { x, y }, previous } = tetrinoState;
           if (x >= h) {
             tetrinoActions.createTetrino();
           } else {
             if (previous) {
-              fieldArray[previous.y][previous.x] = {};
+              fieldArray = updateArray(fieldArray, previous.y, previous.x, {});
             }
-            fieldArray[getBottomBound(y)][getVerticalBound(x)] = {
+            fieldArray = updateArray(fieldArray, y, x, {
               id: tetrinoState.id,
               color: tetrinoState.color
-            };
+            });
             fieldState.fieldArray = fieldArray;
           }
           return fieldState;

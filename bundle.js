@@ -37877,6 +37877,11 @@
 	  return num >= h - 1 ? h - 1 : num;
 	}
 	
+	function updateArray(arr, y, x, value) {
+	  arr[getBottomBound(y)][getVerticalBound(x)] = value;
+	  return arr;
+	}
+	
 	var initialValue = {
 	  height: h * 20 + 'px',
 	  width: w * 30 + 'px',
@@ -37912,12 +37917,12 @@
 	        tetrinoActions.createTetrino();
 	      } else {
 	        if (previous) {
-	          fieldArray[previous.y][previous.x] = {};
+	          fieldArray = updateArray(fieldArray, previous.y, previous.x, {});
 	        }
-	        fieldArray[getBottomBound(y)][getVerticalBound(x)] = {
+	        fieldArray = updateArray(fieldArray, y, x, {
 	          id: tetrinoState.id,
 	          color: tetrinoState.color
-	        };
+	        });
 	        fieldState.fieldArray = fieldArray;
 	      }
 	      return fieldState;
