@@ -31305,17 +31305,17 @@
 	  },
 	
 	  renderField: function renderField(fieldArray) {
-	    return fieldArray.map(function (row) {
-	      return row.map(function (_ref) {
+	    return fieldArray.map(function (row, rowIdx) {
+	      return row.map(function (_ref, colIdx) {
 	        var id = _ref.id;
 	        var color = _ref.color;
 	
 	        if (id) {
 	          return _react2['default'].createElement(_Tetrino2['default'], {
 	            color: color,
-	            key: id });
+	            key: id + rowIdx + colIdx });
 	        }
-	        return null;
+	        return _react2['default'].createElement('div', { key: rowIdx + colIdx });
 	      });
 	    });
 	  },

@@ -17,16 +17,18 @@ export default contain(
     },
 
     renderField(fieldArray) {
-      return fieldArray.map(row => {
-        return row.map(({ id, color }) => {
+      return fieldArray.map((row, rowIdx) => {
+        return row.map(({ id, color }, colIdx) => {
           if (id) {
             return (
               <Tetrino
                 color={ color}
-                key={ id } />
+                key={ id + rowIdx + colIdx } />
             );
           }
-          return null;
+          return (
+            <div key={ rowIdx + colIdx } />
+          );
         });
       });
     },
