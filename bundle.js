@@ -37742,7 +37742,7 @@
 	      var y = position.y;
 	
 	      var newState = {
-	        position: { x: x, y: y + 1 },
+	        position: { y: y, x: x + 1 },
 	        previous: position
 	      };
 	      return (0, _objectAssign2['default'])({}, oldState, newState);
@@ -37756,7 +37756,7 @@
 	      var y = position.y;
 	
 	      var newState = {
-	        position: { x: x, y: y - 1 },
+	        position: { y: y, x: x - 1 },
 	        previous: position
 	      };
 	      return (0, _objectAssign2['default'])({}, oldState, newState);

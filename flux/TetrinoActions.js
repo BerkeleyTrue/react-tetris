@@ -21,7 +21,7 @@ export default Actions({
       const { position } = oldState;
       const { x, y } = position;
       const newState = {
-        position: { x, y: y + 1},
+        position: { y, x: x + 1},
         previous: position
       };
       return assign({}, oldState, newState);
@@ -33,7 +33,7 @@ export default Actions({
       const { position } = oldState;
       const { x, y } = position;
       const newState = {
-        position: { x, y: y - 1},
+        position: { y, x: x - 1},
         previous: position
       };
       return assign({}, oldState, newState);
