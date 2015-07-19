@@ -17,8 +17,7 @@ export default React.createClass({
       backgroundColor: 'black',
       height: '20px',
       width: '20px',
-      top: (y * SCALE) + 'px',
-      left: (x * SCALE) + 'px'
+      transform: 'translate3d(' + (x * SCALE) + 'px,' + (y * SCALE) + 'px, 0)'
     };
 
     return (

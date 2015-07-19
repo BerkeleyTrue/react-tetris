@@ -31385,8 +31385,7 @@
 	      backgroundColor: 'black',
 	      height: '20px',
 	      width: '20px',
-	      top: y * _constants.SCALE + 'px',
-	      left: x * _constants.SCALE + 'px'
+	      transform: 'translate3d(' + x * _constants.SCALE + 'px,' + y * _constants.SCALE + 'px, 0)'
 	    };
 	
 	    return _react2['default'].createElement('div', { style: style });
