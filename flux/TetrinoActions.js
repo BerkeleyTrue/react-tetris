@@ -17,15 +17,25 @@ export default Actions({
 
   moveRight() {
     return (oldState) => {
-      const { position: { x, y } } = oldState;
-      return assign({}, oldState, { position: { x, y: y + 1} });
+      const { position } = oldState;
+      const { x, y } = position;
+      const newState = {
+        position: { x, y: y + 1},
+        previous: position
+      };
+      return assign({}, oldState, newState);
     };
   },
 
   moveLeft() {
     return (oldState) => {
-      const { position: { x, y } } = oldState;
-      return assign({}, oldState, { position: { x, y: y - 1}});
+      const { position } = oldState;
+      const { x, y } = position;
+      const newState = {
+        position: { x, y: y - 1},
+        previous: position
+      };
+      return assign({}, oldState, newState);
     };
   }
 })

@@ -37734,21 +37734,29 @@
 	
 	  moveRight: function moveRight() {
 	    return function (oldState) {
-	      var _oldState$position = oldState.position;
-	      var x = _oldState$position.x;
-	      var y = _oldState$position.y;
+	      var position = oldState.position;
+	      var x = position.x;
+	      var y = position.y;
 	
-	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y + 1 } });
+	      var newState = {
+	        position: { x: x, y: y + 1 },
+	        previous: position
+	      };
+	      return (0, _objectAssign2['default'])({}, oldState, newState);
 	    };
 	  },
 	
 	  moveLeft: function moveLeft() {
 	    return function (oldState) {
-	      var _oldState$position2 = oldState.position;
-	      var x = _oldState$position2.x;
-	      var y = _oldState$position2.y;
+	      var position = oldState.position;
+	      var x = position.x;
+	      var y = position.y;
 	
-	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y - 1 } });
+	      var newState = {
+	        position: { x: x, y: y - 1 },
+	        previous: position
+	      };
+	      return (0, _objectAssign2['default'])({}, oldState, newState);
 	    };
 	  }
 	}).refs({ displayName: 'TetrinoActions' });
@@ -37873,10 +37881,8 @@
 	      var previous = tetrinoState.previous;
 	
 	      if (previous) {
-	        console.log('prev', previous);
 	        fieldArray[previous.y][previous.x] = {};
 	      }
-	      console.log('adding to', x, y);
 	      fieldArray[y][x] = {
 	        id: tetrinoState.id,
 	        color: tetrinoState.color

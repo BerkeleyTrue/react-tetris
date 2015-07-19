@@ -34,10 +34,8 @@ export default Store(initialValue)
           const { fieldArray } = fieldState;
           const { position: { x, y }, previous } = tetrinoState;
           if (previous) {
-            console.log('prev', previous);
             fieldArray[previous.y][previous.x] = {};
           }
-          console.log('adding to', x, y);
           fieldArray[y][x] = {
             id: tetrinoState.id,
             color: tetrinoState.color
