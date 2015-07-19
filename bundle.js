@@ -31361,6 +31361,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
+	var _constants = __webpack_require__(278);
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -31383,8 +31385,8 @@
 	      backgroundColor: 'black',
 	      height: '20px',
 	      width: '20px',
-	      top: x + 'px',
-	      left: y + 'px'
+	      top: x * _constants.SCALE + 'px',
+	      left: y * _constants.SCALE + 'px'
 	    };
 	
 	    return _react2['default'].createElement('div', { style: style });
@@ -38506,6 +38508,20 @@
 	  }
 	}).call(this);
 
+
+/***/ },
+/* 278 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = {
+	  SCALE: 20
+	};
+	module.exports = exports["default"];
 
 /***/ }
 /******/ ]);

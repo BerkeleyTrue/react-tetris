@@ -1,3 +1,4 @@
+import { SCALE } from '../constants';
 import React, { PropTypes } from 'react';
 
 export default React.createClass({
@@ -16,8 +17,8 @@ export default React.createClass({
       backgroundColor: 'black',
       height: '20px',
       width: '20px',
-      top: x + 'px',
-      left: y + 'px'
+      top: (x * SCALE) + 'px',
+      left: (y * SCALE) + 'px'
     };
 
     return (
