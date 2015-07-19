@@ -17,8 +17,8 @@ export default React.createClass({
       backgroundColor: 'black',
       height: '20px',
       width: '20px',
-      top: (x * SCALE) + 'px',
-      left: (y * SCALE) + 'px'
+      top: (y * SCALE) + 'px',
+      left: (x * SCALE) + 'px'
     };
 
     return (

@@ -3,12 +3,13 @@ import { Actions } from 'thundercats';
 
 export default Actions({
   rotate: null,
+  createTetrino: null,
   moveDown() {
     return (oldState) => {
       const { position } = oldState;
       const { x, y } = position;
       const newState = {
-        position: { x: (x + 1), y },
+        position: { y: (y + 1), x },
         previous: position
       };
       return assign({}, oldState, newState);

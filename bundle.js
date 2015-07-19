@@ -31385,8 +31385,8 @@
 	      backgroundColor: 'black',
 	      height: '20px',
 	      width: '20px',
-	      top: x * _constants.SCALE + 'px',
-	      left: y * _constants.SCALE + 'px'
+	      top: y * _constants.SCALE + 'px',
+	      left: x * _constants.SCALE + 'px'
 	    };
 	
 	    return _react2['default'].createElement('div', { style: style });
@@ -37720,6 +37720,7 @@
 	
 	exports['default'] = (0, _thundercats.Actions)({
 	  rotate: null,
+	  createTetrino: null,
 	  moveDown: function moveDown() {
 	    return function (oldState) {
 	      var position = oldState.position;
@@ -37727,7 +37728,7 @@
 	      var y = position.y;
 	
 	      var newState = {
-	        position: { x: x + 1, y: y },
+	        position: { y: y + 1, x: x },
 	        previous: position
 	      };
 	      return (0, _objectAssign2['default'])({}, oldState, newState);
@@ -37791,14 +37792,16 @@
 	  'i': [[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]]
 	};
 	
-	exports['default'] = (0, _thundercats.Store)({
+	var initialValue = {
 	  position: { x: 0, y: 0 },
 	  previous: false,
 	  atBottom: false,
 	  id: _nodeUuid2['default'].v4(),
 	  color: 'blue',
 	  type: shapeDef.i
-	}).refs({ displayName: 'TetrinoStore' }).init(function (_ref) {
+	};
+	
+	exports['default'] = (0, _thundercats.Store)(initialValue).refs({ displayName: 'TetrinoStore' }).init(function (_ref) {
 	  var instance = _ref.instance;
 	  var args = _ref.args;
 	
@@ -37812,6 +37815,12 @@
 	  tetris.subscribe(function () {
 	    tetrinoActions.moveDown();
 	  });
+	
+	  instance.register(transformer(tetrinoActions.createTetrino.map(function () {
+	    return function () {
+	      return initialValue;
+	    };
+	  })));
 	
 	  instance.register(fromMany(transformer(tetrinoActions.moveDown), transformer(tetrinoActions.moveLeft), transformer(tetrinoActions.moveRight)));
 	});
@@ -37841,15 +37850,31 @@
 	
 	var transformer = _thundercats.Store.transformer;
 	
-	var h = 30,
-	    w = 20;
+	var h = 20,
+	    w = 5;
 	
-	function create2DArray(x, y) {
+	function create2DArray(y, x) {
 	  return Array.apply(null, new Array(y)).map(function () {
 	    return Array.apply(null, new Array(x)).map(function () {
 	      return {};
 	    });
 	  });
+	}
+	
+	function getMostLeft(num) {
+	  return num <= 0 ? 0 : num;
+	}
+	
+	function getMostRight(num) {
+	  return num >= w - 1 ? w - 1 : num;
+	}
+	
+	function getVerticalBound(num) {
+	  return getMostLeft(num) === 0 ? 0 : getMostRight(num);
+	}
+	
+	function getBottomBound(num) {
+	  return num >= h - 1 ? h - 1 : num;
 	}
 	
 	var initialValue = {
@@ -37873,6 +37898,7 @@
 	  var tetrisCat = _args[0];
 	
 	  var tetrinoStore = tetrisCat.getStore('tetrinoStore');
+	  var tetrinoActions = tetrisCat.getActions('tetrinoActions');
 	
 	  instance.register(transformer(tetrinoStore.map(function (tetrinoState) {
 	    return function (fieldState) {
@@ -37882,14 +37908,18 @@
 	      var y = _tetrinoState$position.y;
 	      var previous = tetrinoState.previous;
 	
-	      if (previous) {
-	        fieldArray[previous.y][previous.x] = {};
+	      if (x >= h) {
+	        tetrinoActions.createTetrino();
+	      } else {
+	        if (previous) {
+	          fieldArray[previous.y][previous.x] = {};
+	        }
+	        fieldArray[getBottomBound(y)][getVerticalBound(x)] = {
+	          id: tetrinoState.id,
+	          color: tetrinoState.color
+	        };
+	        fieldState.fieldArray = fieldArray;
 	      }
-	      fieldArray[y][x] = {
-	        id: tetrinoState.id,
-	        color: tetrinoState.color
-	      };
-	      fieldState.fieldArray = fieldArray;
 	      return fieldState;
 	    };
 	  })));
