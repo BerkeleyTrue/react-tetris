@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { contain } from 'thundercats-react';
+import Tetrino from './Tetrino';
 
 export default contain(
   {
@@ -10,12 +11,28 @@ export default contain(
 
     propTypes: {
       children: PropTypes.node,
-      width: PropTypes.string,
-      height: PropTypes.string
+      height: PropTypes.string,
+      fieldArray: PropTypes.array,
+      width: PropTypes.string
+    },
+
+    renderField(fieldArray) {
+      return fieldArray.map(row => {
+        return row.map(({ id, color }) => {
+          if (id) {
+            return (
+              <Tetrino
+                color={ color}
+                key={ id } />
+            );
+          }
+          return null;
+        });
+      });
     },
 
     render() {
-      const { height, width } = this.props;
+      const { height, width, fieldArray } = this.props;
       // each column is 20px and there are 20
       // each row is 20px and there are 30
       const styling = {
@@ -30,7 +47,7 @@ export default contain(
         <div
           id='field'
           style={ styling }>
-          { this.props.children }
+          { this.renderField(fieldArray) }
         </div>
       );
     }

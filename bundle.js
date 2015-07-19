@@ -48,6 +48,10 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
+	var _rx = __webpack_require__(158);
+	
+	var _rx2 = _interopRequireDefault(_rx);
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -61,6 +65,8 @@
 	var _fluxTetrisCat = __webpack_require__(264);
 	
 	var _fluxTetrisCat2 = _interopRequireDefault(_fluxTetrisCat);
+	
+	_rx2['default'].config.longStackSupport = true;
 	
 	var mountNode = document.getElementById('tetris');
 	
@@ -20475,10 +20481,6 @@
 	
 	var _Field2 = _interopRequireDefault(_Field);
 	
-	var _Tetrino = __webpack_require__(161);
-	
-	var _Tetrino2 = _interopRequireDefault(_Tetrino);
-	
 	exports['default'] = (0, _thundercatsReact.contain)({
 	  store: 'tetrisStore',
 	  actions: ['tetrisActions', 'tetrinoActions']
@@ -20516,11 +20518,7 @@
 	    return _react2['default'].createElement(
 	      'div',
 	      null,
-	      _react2['default'].createElement(
-	        _Field2['default'],
-	        null,
-	        _react2['default'].createElement(_Tetrino2['default'], null)
-	      )
+	      _react2['default'].createElement(_Field2['default'], null)
 	    );
 	  }
 	}));
@@ -31290,6 +31288,10 @@
 	
 	var _thundercatsReact = __webpack_require__(168);
 	
+	var _Tetrino = __webpack_require__(161);
+	
+	var _Tetrino2 = _interopRequireDefault(_Tetrino);
+	
 	exports['default'] = (0, _thundercatsReact.contain)({
 	  store: 'fieldStore'
 	}, _react2['default'].createClass({
@@ -31297,14 +31299,32 @@
 	
 	  propTypes: {
 	    children: _react.PropTypes.node,
-	    width: _react.PropTypes.string,
-	    height: _react.PropTypes.string
+	    height: _react.PropTypes.string,
+	    fieldArray: _react.PropTypes.array,
+	    width: _react.PropTypes.string
+	  },
+	
+	  renderField: function renderField(fieldArray) {
+	    return fieldArray.map(function (row) {
+	      return row.map(function (_ref) {
+	        var id = _ref.id;
+	        var color = _ref.color;
+	
+	        if (id) {
+	          return _react2['default'].createElement(_Tetrino2['default'], {
+	            color: color,
+	            key: id });
+	        }
+	        return null;
+	      });
+	    });
 	  },
 	
 	  render: function render() {
 	    var _props = this.props;
 	    var height = _props.height;
 	    var width = _props.width;
+	    var fieldArray = _props.fieldArray;
 	
 	    // each column is 20px and there are 20
 	    // each row is 20px and there are 30
@@ -31321,7 +31341,7 @@
 	      {
 	        id: 'field',
 	        style: styling },
-	      this.props.children
+	      this.renderField(fieldArray)
 	    );
 	  }
 	}));
@@ -31343,27 +31363,18 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _thundercatsReact = __webpack_require__(168);
-	
-	// import assign from 'object.assign';
-	
-	exports['default'] = (0, _thundercatsReact.contain)({
-	  store: 'TetrinoState',
-	  actions: 'tetrinoActions'
-	}, _react2['default'].createClass({
+	exports['default'] = _react2['default'].createClass({
 	  displayName: 'Tetrino',
 	
 	  propTypes: {
-	    tetrinoActions: _react.PropTypes.object,
-	    position: _react.PropTypes.object
+	    x: _react.PropTypes.number,
+	    y: _react.PropTypes.number
 	  },
 	
-	  componentDidMount: function componentDidMount() {},
-	
 	  render: function render() {
-	    var _props$position = this.props.position;
-	    var x = _props$position.x;
-	    var y = _props$position.y;
+	    var _props = this.props;
+	    var x = _props.x;
+	    var y = _props.y;
 	
 	    var style = {
 	      position: 'relative',
@@ -31376,7 +31387,7 @@
 	
 	    return _react2['default'].createElement('div', { style: style });
 	  }
-	}));
+	});
 	module.exports = exports['default'];
 
 /***/ },
@@ -37622,11 +37633,11 @@
 	exports['default'] = (0, _thundercats.Cat)().refs({ displayName: 'TetrisCat' }).init(function (_ref) {
 	  var instance = _ref.instance;
 	
-	  instance.register(_FieldStore2['default']);
 	  instance.register(_TetrisActions2['default']);
 	  instance.register(_TetrisStore2['default'], null, instance);
 	  instance.register(_TetrinoActions2['default']);
 	  instance.register(_TetrinoState2['default'], null, instance);
+	  instance.register(_FieldStore2['default'], null, instance);
 	});
 	module.exports = exports['default'];
 
@@ -37703,16 +37714,15 @@
 	
 	var _thundercats = __webpack_require__(178);
 	
-	var _constants = __webpack_require__(276);
-	
 	exports['default'] = (0, _thundercats.Actions)({
+	  rotate: null,
 	  moveDown: function moveDown() {
 	    return function (oldState) {
 	      var _oldState$position = oldState.position;
 	      var x = _oldState$position.x;
 	      var y = _oldState$position.y;
 	
-	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x + _constants.SCALE, y: y } });
+	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x + 1, y: y } });
 	    };
 	  },
 	
@@ -37722,7 +37732,7 @@
 	      var x = _oldState$position2.x;
 	      var y = _oldState$position2.y;
 	
-	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y + _constants.SCALE } });
+	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y + 1 } });
 	    };
 	  },
 	
@@ -37732,7 +37742,7 @@
 	      var x = _oldState$position3.x;
 	      var y = _oldState$position3.y;
 	
-	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y - _constants.SCALE } });
+	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y - 1 } });
 	    };
 	  }
 	}).refs({ displayName: 'TetrinoActions' });
@@ -37754,16 +37764,18 @@
 	
 	var _thundercats = __webpack_require__(178);
 	
-	var _objectAssign = __webpack_require__(162);
+	var _nodeUuid = __webpack_require__(277);
 	
-	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+	var _nodeUuid2 = _interopRequireDefault(_nodeUuid);
 	
 	var fromMany = _thundercats.Store.fromMany;
 	var transformer = _thundercats.Store.transformer;
 	exports['default'] = (0, _thundercats.Store)({
 	  position: { x: 0, y: 0 },
-	  atBottom: false
-	}).refs({ displayName: 'TetrinoState' }).init(function (_ref) {
+	  atBottom: false,
+	  id: _nodeUuid2['default'].v4(),
+	  color: 'blue'
+	}).refs({ displayName: 'TetrinoStore' }).init(function (_ref) {
 	  var instance = _ref.instance;
 	  var args = _ref.args;
 	
@@ -37772,32 +37784,11 @@
 	  var tetrisCat = _args[0];
 	
 	  var tetrinoActions = tetrisCat.getActions('tetrinoActions');
-	  var tetrisStore = tetrisCat.getStore('tetrisStore');
-	  var fieldStore = tetrisCat.getStore('fieldStore');
+	  var tetris = tetrisCat.getStore('tetrisStore');
 	
-	  instance.register(tetrisStore.withLatestFrom(fieldStore, function (tetrisStae, fieldState) {
-	    return fieldState;
-	  }).map(function (fieldState) {
-	    return {
-	      transform: function transform(tetrinoState) {
-	        if (tetrinoState.atBottom) {
-	          return tetrinoState;
-	        }
-	        var newPosition = {
-	          x: tetrinoState.position.x + 20,
-	          y: tetrinoState.position.y
-	        };
-	
-	        var bottomState = { atBottom: tetrinoState.atBottom };
-	
-	        if (newPosition.x >= (fieldState.h - 1) * 20) {
-	          bottomState = { atBottom: true };
-	        }
-	
-	        return (0, _objectAssign2['default'])({}, tetrinoState, { position: newPosition }, bottomState);
-	      }
-	    };
-	  }));
+	  tetris.subscribe(function () {
+	    tetrinoActions.moveDown();
+	  });
 	
 	  instance.register(fromMany(transformer(tetrinoActions.moveDown), transformer(tetrinoActions.moveLeft), transformer(tetrinoActions.moveRight)));
 	});
@@ -37813,6 +37804,8 @@
 	  value: true
 	});
 	
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	var _rx = __webpack_require__(158);
@@ -37821,13 +37814,17 @@
 	
 	var _thundercats = __webpack_require__(178);
 	
+	// import uuid from 'node-uuid';
+	
+	var transformer = _thundercats.Store.transformer;
+	
 	var h = 30,
 	    w = 20;
 	
 	function create2DArray(x, y) {
 	  return Array.apply(null, new Array(y)).map(function () {
 	    return Array.apply(null, new Array(x)).map(function () {
-	      return 0;
+	      return {};
 	    });
 	  });
 	}
@@ -37840,8 +37837,33 @@
 	  fieldArray: create2DArray(h, w)
 	};
 	
+	/*
+	 * [[{ color, id }], [{ color, id }]]
+	 */
+	
 	exports['default'] = (0, _thundercats.Store)(initialValue).refs({ displayName: 'FieldStore' }).init(function (_ref) {
 	  var instance = _ref.instance;
+	  var args = _ref.args;
+	
+	  var _args = _slicedToArray(args, 1);
+	
+	  var tetrisCat = _args[0];
+	
+	  var tetrinoStore = tetrisCat.getStore('tetrinoStore');
+	
+	  instance.register(transformer(tetrinoStore.map(function (tetrinoState) {
+	    return function (fieldState) {
+	      var _tetrinoState$position = tetrinoState.position;
+	      var x = _tetrinoState$position.x;
+	      var y = _tetrinoState$position.y;
+	
+	      fieldState.fieldArray[y][x] = {
+	        id: tetrinoState.id,
+	        color: tetrinoState.color
+	      };
+	      return fieldState;
+	    };
+	  })));
 	
 	  instance.register(_rx2['default'].Observable.interval(1000).map({
 	    transform: _rx2['default'].helpers.identity
@@ -38205,18 +38227,258 @@
 
 
 /***/ },
-/* 276 */
-/***/ function(module, exports) {
+/* 276 */,
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	var __WEBPACK_AMD_DEFINE_RESULT__;//     uuid.js
+	//
+	//     Copyright (c) 2010-2012 Robert Kieffer
+	//     MIT License - http://opensource.org/licenses/mit-license.php
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = {
-	  SCALE: 20
-	};
-	module.exports = exports["default"];
+	(function() {
+	  var _global = this;
+	
+	  // Unique ID creation requires a high quality random # generator.  We feature
+	  // detect to determine the best RNG source, normalizing to a function that
+	  // returns 128-bits of randomness, since that's what's usually required
+	  var _rng;
+	
+	  // Node.js crypto-based RNG - http://nodejs.org/docs/v0.6.2/api/crypto.html
+	  //
+	  // Moderately fast, high quality
+	  if (typeof(_global.require) == 'function') {
+	    try {
+	      var _rb = _global.require('crypto').randomBytes;
+	      _rng = _rb && function() {return _rb(16);};
+	    } catch(e) {}
+	  }
+	
+	  if (!_rng && _global.crypto && crypto.getRandomValues) {
+	    // WHATWG crypto-based RNG - http://wiki.whatwg.org/wiki/Crypto
+	    //
+	    // Moderately fast, high quality
+	    var _rnds8 = new Uint8Array(16);
+	    _rng = function whatwgRNG() {
+	      crypto.getRandomValues(_rnds8);
+	      return _rnds8;
+	    };
+	  }
+	
+	  if (!_rng) {
+	    // Math.random()-based (RNG)
+	    //
+	    // If all else fails, use Math.random().  It's fast, but is of unspecified
+	    // quality.
+	    var  _rnds = new Array(16);
+	    _rng = function() {
+	      for (var i = 0, r; i < 16; i++) {
+	        if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+	        _rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+	      }
+	
+	      return _rnds;
+	    };
+	  }
+	
+	  // Buffer class to use
+	  var BufferClass = typeof(_global.Buffer) == 'function' ? _global.Buffer : Array;
+	
+	  // Maps for number <-> hex string conversion
+	  var _byteToHex = [];
+	  var _hexToByte = {};
+	  for (var i = 0; i < 256; i++) {
+	    _byteToHex[i] = (i + 0x100).toString(16).substr(1);
+	    _hexToByte[_byteToHex[i]] = i;
+	  }
+	
+	  // **`parse()` - Parse a UUID into it's component bytes**
+	  function parse(s, buf, offset) {
+	    var i = (buf && offset) || 0, ii = 0;
+	
+	    buf = buf || [];
+	    s.toLowerCase().replace(/[0-9a-f]{2}/g, function(oct) {
+	      if (ii < 16) { // Don't overflow!
+	        buf[i + ii++] = _hexToByte[oct];
+	      }
+	    });
+	
+	    // Zero out remaining bytes if string was short
+	    while (ii < 16) {
+	      buf[i + ii++] = 0;
+	    }
+	
+	    return buf;
+	  }
+	
+	  // **`unparse()` - Convert UUID byte array (ala parse()) into a string**
+	  function unparse(buf, offset) {
+	    var i = offset || 0, bth = _byteToHex;
+	    return  bth[buf[i++]] + bth[buf[i++]] +
+	            bth[buf[i++]] + bth[buf[i++]] + '-' +
+	            bth[buf[i++]] + bth[buf[i++]] + '-' +
+	            bth[buf[i++]] + bth[buf[i++]] + '-' +
+	            bth[buf[i++]] + bth[buf[i++]] + '-' +
+	            bth[buf[i++]] + bth[buf[i++]] +
+	            bth[buf[i++]] + bth[buf[i++]] +
+	            bth[buf[i++]] + bth[buf[i++]];
+	  }
+	
+	  // **`v1()` - Generate time-based UUID**
+	  //
+	  // Inspired by https://github.com/LiosK/UUID.js
+	  // and http://docs.python.org/library/uuid.html
+	
+	  // random #'s we need to init node and clockseq
+	  var _seedBytes = _rng();
+	
+	  // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+	  var _nodeId = [
+	    _seedBytes[0] | 0x01,
+	    _seedBytes[1], _seedBytes[2], _seedBytes[3], _seedBytes[4], _seedBytes[5]
+	  ];
+	
+	  // Per 4.2.2, randomize (14 bit) clockseq
+	  var _clockseq = (_seedBytes[6] << 8 | _seedBytes[7]) & 0x3fff;
+	
+	  // Previous uuid creation time
+	  var _lastMSecs = 0, _lastNSecs = 0;
+	
+	  // See https://github.com/broofa/node-uuid for API details
+	  function v1(options, buf, offset) {
+	    var i = buf && offset || 0;
+	    var b = buf || [];
+	
+	    options = options || {};
+	
+	    var clockseq = options.clockseq != null ? options.clockseq : _clockseq;
+	
+	    // UUID timestamps are 100 nano-second units since the Gregorian epoch,
+	    // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
+	    // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
+	    // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
+	    var msecs = options.msecs != null ? options.msecs : new Date().getTime();
+	
+	    // Per 4.2.1.2, use count of uuid's generated during the current clock
+	    // cycle to simulate higher resolution clock
+	    var nsecs = options.nsecs != null ? options.nsecs : _lastNSecs + 1;
+	
+	    // Time since last uuid creation (in msecs)
+	    var dt = (msecs - _lastMSecs) + (nsecs - _lastNSecs)/10000;
+	
+	    // Per 4.2.1.2, Bump clockseq on clock regression
+	    if (dt < 0 && options.clockseq == null) {
+	      clockseq = clockseq + 1 & 0x3fff;
+	    }
+	
+	    // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
+	    // time interval
+	    if ((dt < 0 || msecs > _lastMSecs) && options.nsecs == null) {
+	      nsecs = 0;
+	    }
+	
+	    // Per 4.2.1.2 Throw error if too many uuids are requested
+	    if (nsecs >= 10000) {
+	      throw new Error('uuid.v1(): Can\'t create more than 10M uuids/sec');
+	    }
+	
+	    _lastMSecs = msecs;
+	    _lastNSecs = nsecs;
+	    _clockseq = clockseq;
+	
+	    // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
+	    msecs += 12219292800000;
+	
+	    // `time_low`
+	    var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+	    b[i++] = tl >>> 24 & 0xff;
+	    b[i++] = tl >>> 16 & 0xff;
+	    b[i++] = tl >>> 8 & 0xff;
+	    b[i++] = tl & 0xff;
+	
+	    // `time_mid`
+	    var tmh = (msecs / 0x100000000 * 10000) & 0xfffffff;
+	    b[i++] = tmh >>> 8 & 0xff;
+	    b[i++] = tmh & 0xff;
+	
+	    // `time_high_and_version`
+	    b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
+	    b[i++] = tmh >>> 16 & 0xff;
+	
+	    // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
+	    b[i++] = clockseq >>> 8 | 0x80;
+	
+	    // `clock_seq_low`
+	    b[i++] = clockseq & 0xff;
+	
+	    // `node`
+	    var node = options.node || _nodeId;
+	    for (var n = 0; n < 6; n++) {
+	      b[i + n] = node[n];
+	    }
+	
+	    return buf ? buf : unparse(b);
+	  }
+	
+	  // **`v4()` - Generate random UUID**
+	
+	  // See https://github.com/broofa/node-uuid for API details
+	  function v4(options, buf, offset) {
+	    // Deprecated - 'format' argument, as supported in v1.2
+	    var i = buf && offset || 0;
+	
+	    if (typeof(options) == 'string') {
+	      buf = options == 'binary' ? new BufferClass(16) : null;
+	      options = null;
+	    }
+	    options = options || {};
+	
+	    var rnds = options.random || (options.rng || _rng)();
+	
+	    // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+	    rnds[6] = (rnds[6] & 0x0f) | 0x40;
+	    rnds[8] = (rnds[8] & 0x3f) | 0x80;
+	
+	    // Copy bytes to buffer, if provided
+	    if (buf) {
+	      for (var ii = 0; ii < 16; ii++) {
+	        buf[i + ii] = rnds[ii];
+	      }
+	    }
+	
+	    return buf || unparse(rnds);
+	  }
+	
+	  // Export public API
+	  var uuid = v4;
+	  uuid.v1 = v1;
+	  uuid.v4 = v4;
+	  uuid.parse = parse;
+	  uuid.unparse = unparse;
+	  uuid.BufferClass = BufferClass;
+	
+	  if (typeof(module) != 'undefined' && module.exports) {
+	    // Publish as node.js module
+	    module.exports = uuid;
+	  } else  if (true) {
+	    // Publish as AMD module
+	    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {return uuid;}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	 
+	
+	  } else {
+	    // Publish as global (in browsers)
+	    var _previousRoot = _global.uuid;
+	
+	    // **`noConflict()` - (browser only) to reset global 'uuid' var**
+	    uuid.noConflict = function() {
+	      _global.uuid = _previousRoot;
+	      return uuid;
+	    };
+	
+	    _global.uuid = uuid;
+	  }
+	}).call(this);
+
 
 /***/ }
 /******/ ]);

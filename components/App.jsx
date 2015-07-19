@@ -3,7 +3,6 @@ import React, { PropTypes } from 'react';
 import keyBinding from 'react-keybinding';
 import { contain } from 'thundercats-react';
 import Field from './Field';
-import Tetrino from './Tetrino';
 
 export default contain(
   {
@@ -45,9 +44,7 @@ export default contain(
     render() {
       return (
         <div>
-          <Field>
-            <Tetrino />
-          </Field>
+          <Field />
         </div>
       );
     }

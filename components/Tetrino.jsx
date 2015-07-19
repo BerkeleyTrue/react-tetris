@@ -1,40 +1,28 @@
 import React, { PropTypes } from 'react';
-import { contain } from 'thundercats-react';
-// import assign from 'object.assign';
 
+export default React.createClass({
+  displayName: 'Tetrino',
 
-export default contain(
-  {
-    store: 'TetrinoState',
-    actions: 'tetrinoActions'
+  propTypes: {
+    x: PropTypes.number,
+    y: PropTypes.number
   },
-  React.createClass({
-    displayName: 'Tetrino',
 
-    propTypes: {
-      tetrinoActions: PropTypes.object,
-      position: PropTypes.object
-    },
+  render() {
+    const { x, y } = this.props;
 
-    componentDidMount() {
-    },
+    const style = {
+      position: 'relative',
+      backgroundColor: 'black',
+      height: '20px',
+      width: '20px',
+      top: x + 'px',
+      left: y + 'px'
+    };
 
-    render() {
-      const { position: { x, y } } = this.props;
-
-      const style = {
-        position: 'relative',
-        backgroundColor: 'black',
-        height: '20px',
-        width: '20px',
-        top: x + 'px',
-        left: y + 'px'
-      };
-
-      return (
-        <div style={ style }>
-        </div>
-      );
-    }
-  })
-);
+    return (
+      <div style={ style }>
+      </div>
+    );
+  }
+});

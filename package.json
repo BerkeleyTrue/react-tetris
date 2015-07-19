@@ -19,6 +19,7 @@
     "babel-loader": "^5.2.2",
     "browser-sync": "^2.7.13",
     "node-libs-browser": "^0.5.2",
+    "node-uuid": "^1.4.3",
     "object.assign": "^3.0.1",
     "react": "^0.13.3",
     "react-keybinding": "^2.0.0",

@@ -1,48 +1,23 @@
 import { Store } from 'thundercats';
-import assign from 'object.assign';
+import uuid from 'node-uuid';
 
 const { fromMany, transformer } = Store;
 
 export default Store({
   position: { x: 0, y: 0},
-  atBottom: false
+  atBottom: false,
+  id: uuid.v4(),
+  color: 'blue'
 })
-  .refs({ displayName: 'TetrinoState' })
+  .refs({ displayName: 'TetrinoStore' })
   .init(({ instance, args }) => {
     const [tetrisCat] = args;
     const tetrinoActions = tetrisCat.getActions('tetrinoActions');
-    const tetrisStore = tetrisCat.getStore('tetrisStore');
-    const fieldStore = tetrisCat.getStore('fieldStore');
+    const tetris = tetrisCat.getStore('tetrisStore');
 
-    instance.register(
-      tetrisStore.withLatestFrom(fieldStore, ( tetrisStae, fieldState) => {
-        return fieldState;
-      }).map((fieldState) => {
-      return {
-        transform: (tetrinoState) => {
-          if (tetrinoState.atBottom) {
-            return tetrinoState;
-          }
-          const newPosition = {
-            x: tetrinoState.position.x + 20,
-            y: tetrinoState.position.y
-          };
-
-          let bottomState = { atBottom: tetrinoState.atBottom };
-
-          if (newPosition.x >= (fieldState.h - 1) * 20) {
-            bottomState = { atBottom: true };
-          }
-
-          return assign(
-            {},
-            tetrinoState,
-            { position: newPosition },
-            bottomState
-          );
-        }
-      };
-    }));
+    tetris.subscribe(() => {
+      tetrinoActions.moveDown();
+    });
 
     instance.register(fromMany(
       transformer(tetrinoActions.moveDown),
