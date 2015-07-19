@@ -37913,7 +37913,7 @@
 	      var y = _tetrinoState$position.y;
 	      var previous = tetrinoState.previous;
 	
-	      if (x >= h) {
+	      if (y >= h - 1) {
 	        tetrinoActions.createTetrino();
 	      } else {
 	        if (previous) {

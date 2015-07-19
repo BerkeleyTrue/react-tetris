@@ -55,7 +55,7 @@ export default Store(initialValue)
         return (fieldState) => {
           let { fieldArray } = fieldState;
           const { position: { x, y }, previous } = tetrinoState;
-          if (x >= h) {
+          if (y >= h - 1) {
             tetrinoActions.createTetrino();
           } else {
             if (previous) {
