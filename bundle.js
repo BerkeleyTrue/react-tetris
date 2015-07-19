@@ -31313,7 +31313,9 @@
 	        if (id) {
 	          return _react2['default'].createElement(_Tetrino2['default'], {
 	            color: color,
-	            key: id + rowIdx + colIdx });
+	            key: id + rowIdx + colIdx,
+	            x: colIdx,
+	            y: rowIdx });
 	        }
 	        return _react2['default'].createElement('div', { key: rowIdx + colIdx });
 	      });
@@ -37718,19 +37720,23 @@
 	  rotate: null,
 	  moveDown: function moveDown() {
 	    return function (oldState) {
-	      var _oldState$position = oldState.position;
-	      var x = _oldState$position.x;
-	      var y = _oldState$position.y;
+	      var position = oldState.position;
+	      var x = position.x;
+	      var y = position.y;
 	
-	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x + 1, y: y } });
+	      var newState = {
+	        position: { x: x + 1, y: y },
+	        previous: position
+	      };
+	      return (0, _objectAssign2['default'])({}, oldState, newState);
 	    };
 	  },
 	
 	  moveRight: function moveRight() {
 	    return function (oldState) {
-	      var _oldState$position2 = oldState.position;
-	      var x = _oldState$position2.x;
-	      var y = _oldState$position2.y;
+	      var _oldState$position = oldState.position;
+	      var x = _oldState$position.x;
+	      var y = _oldState$position.y;
 	
 	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y + 1 } });
 	    };
@@ -37738,9 +37744,9 @@
 	
 	  moveLeft: function moveLeft() {
 	    return function (oldState) {
-	      var _oldState$position3 = oldState.position;
-	      var x = _oldState$position3.x;
-	      var y = _oldState$position3.y;
+	      var _oldState$position2 = oldState.position;
+	      var x = _oldState$position2.x;
+	      var y = _oldState$position2.y;
 	
 	      return (0, _objectAssign2['default'])({}, oldState, { position: { x: x, y: y - 1 } });
 	    };
@@ -37770,11 +37776,18 @@
 	
 	var fromMany = _thundercats.Store.fromMany;
 	var transformer = _thundercats.Store.transformer;
+	
+	var shapeDef = {
+	  'i': [[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]]
+	};
+	
 	exports['default'] = (0, _thundercats.Store)({
 	  position: { x: 0, y: 0 },
+	  previous: false,
 	  atBottom: false,
 	  id: _nodeUuid2['default'].v4(),
-	  color: 'blue'
+	  color: 'blue',
+	  type: shapeDef.i
 	}).refs({ displayName: 'TetrinoStore' }).init(function (_ref) {
 	  var instance = _ref.instance;
 	  var args = _ref.args;
@@ -37853,14 +37866,22 @@
 	
 	  instance.register(transformer(tetrinoStore.map(function (tetrinoState) {
 	    return function (fieldState) {
+	      var fieldArray = fieldState.fieldArray;
 	      var _tetrinoState$position = tetrinoState.position;
 	      var x = _tetrinoState$position.x;
 	      var y = _tetrinoState$position.y;
+	      var previous = tetrinoState.previous;
 	
-	      fieldState.fieldArray[y][x] = {
+	      if (previous) {
+	        console.log('prev', previous);
+	        fieldArray[previous.y][previous.x] = {};
+	      }
+	      console.log('adding to', x, y);
+	      fieldArray[y][x] = {
 	        id: tetrinoState.id,
 	        color: tetrinoState.color
 	      };
+	      fieldState.fieldArray = fieldArray;
 	      return fieldState;
 	    };
 	  })));

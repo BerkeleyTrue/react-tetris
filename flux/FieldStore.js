@@ -31,11 +31,18 @@ export default Store(initialValue)
     instance.register(transformer(tetrinoStore.map(
       (tetrinoState) => {
         return (fieldState) => {
-          const { position: { x, y }} = tetrinoState;
-          fieldState.fieldArray[y][x] = {
+          const { fieldArray } = fieldState;
+          const { position: { x, y }, previous } = tetrinoState;
+          if (previous) {
+            console.log('prev', previous);
+            fieldArray[previous.y][previous.x] = {};
+          }
+          console.log('adding to', x, y);
+          fieldArray[y][x] = {
             id: tetrinoState.id,
             color: tetrinoState.color
           };
+          fieldState.fieldArray = fieldArray;
           return fieldState;
         };
       }

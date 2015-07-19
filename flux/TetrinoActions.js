@@ -5,8 +5,13 @@ export default Actions({
   rotate: null,
   moveDown() {
     return (oldState) => {
-      const { position: { x, y } } = oldState;
-      return assign({}, oldState, { position: { x: (x + 1), y } });
+      const { position } = oldState;
+      const { x, y } = position;
+      const newState = {
+        position: { x: (x + 1), y },
+        previous: position
+      };
+      return assign({}, oldState, newState);
     };
   },
 

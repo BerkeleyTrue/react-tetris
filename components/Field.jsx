@@ -23,7 +23,9 @@ export default contain(
             return (
               <Tetrino
                 color={ color}
-                key={ id + rowIdx + colIdx } />
+                key={ id + rowIdx + colIdx }
+                x={ colIdx }
+                y={ rowIdx } />
             );
           }
           return (
