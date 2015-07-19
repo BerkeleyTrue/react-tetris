@@ -1,5 +1,22 @@
 import assign from 'object.assign';
 import { Actions } from 'thundercats';
+import { H, W } from '../constants';
+
+function getLeftBound(num) {
+  return num <= 0 ? 0 : num;
+}
+
+function getRightBound(num) {
+  return num >= W - 1 ? W - 1 : num;
+}
+
+function getVerticalBound(num) {
+  return getLeftBound(num) === 0 ? 0 : getRightBound(num);
+}
+
+function getBottomBound(num) {
+  return num >= H - 1 ? H - 1 : num;
+}
 
 export default Actions({
   rotate: null,
@@ -9,7 +26,10 @@ export default Actions({
       const { position } = oldState;
       const { x, y } = position;
       const newState = {
-        position: { y: (y + 1), x },
+        position: {
+          y: getBottomBound(y + 1),
+          x
+        },
         previous: position
       };
       return assign({}, oldState, newState);

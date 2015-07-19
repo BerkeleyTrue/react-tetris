@@ -1,42 +1,24 @@
 import Rx from 'rx';
 import { Store } from 'thundercats';
 // import uuid from 'node-uuid';
+import { H, W } from '../constants';
 
 const { transformer } = Store;
-const h = 20, w = 5;
 
 function create2DArray(y, x) {
   return Array.apply(null, new Array(y))
     .map(() => Array.apply(null, new Array(x)).map(() => ({})));
 }
 
-function getMostLeft(num) {
-  return num <= 0 ? 0 : num;
-}
-
-function getMostRight(num) {
-  return num >= w - 1 ? w - 1 : num;
-}
-
-function getVerticalBound(num) {
-  return getMostLeft(num) === 0 ? 0 : getMostRight(num);
-}
-
 function getBottomBound(num) {
-  return num >= h - 1 ? h - 1 : num;
-}
-
-function updateArray(arr, y, x, value) {
-  arr[getBottomBound(y)][getVerticalBound(x)] = value;
-  return arr;
+  return num >= H - 1 ? H - 1 : num;
 }
 
 const initialValue = {
-  height: (h * 20) + 'px',
-  width: (w * 30) + 'px',
-  h,
-  w,
-  fieldArray: create2DArray(h, w)
+  height: (H * 20) + 'px',
+  width: (W * 30) + 'px',
+  fieldArray: create2DArray(H, W),
+  tetrinos: []
 };
 
 /*
@@ -53,20 +35,24 @@ export default Store(initialValue)
     instance.register(transformer(tetrinoStore.map(
       (tetrinoState) => {
         return (fieldState) => {
-          let { fieldArray } = fieldState;
-          const { position: { x, y }, previous } = tetrinoState;
-          if (y >= h - 1) {
+          let { id } = tetrinoState;
+          const { tetrinos } = fieldState;
+          if (!tetrinos.some(({ id }) => id === tetrinoState.id)) {
+            tetrinos.push(tetrinoState);
+          }
+
+          if (getBottomBound(tetrinoState.position.y) === H - 1) {
             tetrinoActions.createTetrino();
           } else {
-            if (previous) {
-              fieldArray = updateArray(fieldArray, previous.y, previous.x, {});
-            }
-            fieldArray = updateArray(fieldArray, y, x, {
-              id: tetrinoState.id,
-              color: tetrinoState.color
-            });
-            fieldState.fieldArray = fieldArray;
+            fieldState.tetrinos = tetrinos
+              .map(tetrino => {
+                if (tetrino.id === id) {
+                  return tetrinoState;
+                }
+                return tetrino;
+              });
           }
+
           return fieldState;
         };
       }

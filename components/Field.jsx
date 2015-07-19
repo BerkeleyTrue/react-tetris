@@ -13,30 +13,24 @@ export default contain(
       children: PropTypes.node,
       height: PropTypes.string,
       fieldArray: PropTypes.array,
+      tetrinos: PropTypes.array,
       width: PropTypes.string
     },
 
-    renderField(fieldArray) {
-      return fieldArray.map((row, rowIdx) => {
-        return row.map(({ id, color }, colIdx) => {
-          if (id) {
-            return (
-              <Tetrino
-                color={ color}
-                key={ id + rowIdx + colIdx }
-                x={ colIdx }
-                y={ rowIdx } />
-            );
-          }
-          return (
-            <div key={ rowIdx + colIdx } />
-          );
-        });
+    renderField(tetrinos) {
+      return tetrinos.map(({ id, color, position: { x, y } }) => {
+        return (
+          <Tetrino
+            color={ color }
+            key={ id }
+            x={ x }
+            y={ y } />
+        );
       });
     },
 
     render() {
-      const { height, width, fieldArray } = this.props;
+      const { height, width, tetrinos } = this.props;
       // each column is 20px and there are 20
       // each row is 20px and there are 30
       const styling = {
@@ -51,7 +45,7 @@ export default contain(
         <div
           id='field'
           style={ styling }>
-          { this.renderField(fieldArray) }
+          { this.renderField(tetrinos) }
         </div>
       );
     }

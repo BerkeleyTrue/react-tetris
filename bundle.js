@@ -31301,24 +31301,23 @@
 	    children: _react.PropTypes.node,
 	    height: _react.PropTypes.string,
 	    fieldArray: _react.PropTypes.array,
+	    tetrinos: _react.PropTypes.array,
 	    width: _react.PropTypes.string
 	  },
 	
-	  renderField: function renderField(fieldArray) {
-	    return fieldArray.map(function (row, rowIdx) {
-	      return row.map(function (_ref, colIdx) {
-	        var id = _ref.id;
-	        var color = _ref.color;
+	  renderField: function renderField(tetrinos) {
+	    return tetrinos.map(function (_ref) {
+	      var id = _ref.id;
+	      var color = _ref.color;
+	      var _ref$position = _ref.position;
+	      var x = _ref$position.x;
+	      var y = _ref$position.y;
 	
-	        if (id) {
-	          return _react2['default'].createElement(_Tetrino2['default'], {
-	            color: color,
-	            key: id + rowIdx + colIdx,
-	            x: colIdx,
-	            y: rowIdx });
-	        }
-	        return _react2['default'].createElement('div', { key: rowIdx + colIdx });
-	      });
+	      return _react2['default'].createElement(_Tetrino2['default'], {
+	        color: color,
+	        key: id,
+	        x: x,
+	        y: y });
 	    });
 	  },
 	
@@ -31326,7 +31325,7 @@
 	    var _props = this.props;
 	    var height = _props.height;
 	    var width = _props.width;
-	    var fieldArray = _props.fieldArray;
+	    var tetrinos = _props.tetrinos;
 	
 	    // each column is 20px and there are 20
 	    // each row is 20px and there are 30
@@ -31343,7 +31342,7 @@
 	      {
 	        id: 'field',
 	        style: styling },
-	      this.renderField(fieldArray)
+	      this.renderField(tetrinos)
 	    );
 	  }
 	}));
@@ -37717,6 +37716,24 @@
 	
 	var _thundercats = __webpack_require__(178);
 	
+	var _constants = __webpack_require__(278);
+	
+	function getLeftBound(num) {
+	  return num <= 0 ? 0 : num;
+	}
+	
+	function getRightBound(num) {
+	  return num >= _constants.W - 1 ? _constants.W - 1 : num;
+	}
+	
+	function getVerticalBound(num) {
+	  return getLeftBound(num) === 0 ? 0 : getRightBound(num);
+	}
+	
+	function getBottomBound(num) {
+	  return num >= _constants.H - 1 ? _constants.H - 1 : num;
+	}
+	
 	exports['default'] = (0, _thundercats.Actions)({
 	  rotate: null,
 	  createTetrino: null,
@@ -37727,7 +37744,10 @@
 	      var y = position.y;
 	
 	      var newState = {
-	        position: { y: y + 1, x: x },
+	        position: {
+	          y: getBottomBound(y + 1),
+	          x: x
+	        },
 	        previous: position
 	      };
 	      return (0, _objectAssign2['default'])({}, oldState, newState);
@@ -37791,16 +37811,18 @@
 	  'i': [[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]]
 	};
 	
-	var initialValue = {
-	  position: { x: 0, y: 0 },
-	  previous: false,
-	  atBottom: false,
-	  id: _nodeUuid2['default'].v4(),
-	  color: 'blue',
-	  type: shapeDef.i
-	};
+	function createTetrino() {
+	  return {
+	    id: _nodeUuid2['default'].v4(),
+	    position: { x: 0, y: 0 },
+	    previous: false,
+	    atBottom: false,
+	    color: 'blue',
+	    type: shapeDef.i
+	  };
+	}
 	
-	exports['default'] = (0, _thundercats.Store)(initialValue).refs({ displayName: 'TetrinoStore' }).init(function (_ref) {
+	exports['default'] = (0, _thundercats.Store)(createTetrino()).refs({ displayName: 'TetrinoStore' }).init(function (_ref) {
 	  var instance = _ref.instance;
 	  var args = _ref.args;
 	
@@ -37817,7 +37839,7 @@
 	
 	  instance.register(transformer(tetrinoActions.createTetrino.map(function () {
 	    return function () {
-	      return initialValue;
+	      return createTetrino();
 	    };
 	  })));
 	
@@ -37847,10 +37869,9 @@
 	
 	// import uuid from 'node-uuid';
 	
-	var transformer = _thundercats.Store.transformer;
+	var _constants = __webpack_require__(278);
 	
-	var h = 20,
-	    w = 5;
+	var transformer = _thundercats.Store.transformer;
 	
 	function create2DArray(y, x) {
 	  return Array.apply(null, new Array(y)).map(function () {
@@ -37860,33 +37881,15 @@
 	  });
 	}
 	
-	function getMostLeft(num) {
-	  return num <= 0 ? 0 : num;
-	}
-	
-	function getMostRight(num) {
-	  return num >= w - 1 ? w - 1 : num;
-	}
-	
-	function getVerticalBound(num) {
-	  return getMostLeft(num) === 0 ? 0 : getMostRight(num);
-	}
-	
 	function getBottomBound(num) {
-	  return num >= h - 1 ? h - 1 : num;
-	}
-	
-	function updateArray(arr, y, x, value) {
-	  arr[getBottomBound(y)][getVerticalBound(x)] = value;
-	  return arr;
+	  return num >= _constants.H - 1 ? _constants.H - 1 : num;
 	}
 	
 	var initialValue = {
-	  height: h * 20 + 'px',
-	  width: w * 30 + 'px',
-	  h: h,
-	  w: w,
-	  fieldArray: create2DArray(h, w)
+	  height: _constants.H * 20 + 'px',
+	  width: _constants.W * 30 + 'px',
+	  fieldArray: create2DArray(_constants.H, _constants.W),
+	  tetrinos: []
 	};
 	
 	/*
@@ -37906,24 +37909,27 @@
 	
 	  instance.register(transformer(tetrinoStore.map(function (tetrinoState) {
 	    return function (fieldState) {
-	      var fieldArray = fieldState.fieldArray;
-	      var _tetrinoState$position = tetrinoState.position;
-	      var x = _tetrinoState$position.x;
-	      var y = _tetrinoState$position.y;
-	      var previous = tetrinoState.previous;
+	      var id = tetrinoState.id;
+	      var tetrinos = fieldState.tetrinos;
 	
-	      if (y >= h - 1) {
+	      if (!tetrinos.some(function (_ref2) {
+	        var id = _ref2.id;
+	        return id === tetrinoState.id;
+	      })) {
+	        tetrinos.push(tetrinoState);
+	      }
+	
+	      if (getBottomBound(tetrinoState.position.y) === _constants.H - 1) {
 	        tetrinoActions.createTetrino();
 	      } else {
-	        if (previous) {
-	          fieldArray = updateArray(fieldArray, previous.y, previous.x, {});
-	        }
-	        fieldArray = updateArray(fieldArray, y, x, {
-	          id: tetrinoState.id,
-	          color: tetrinoState.color
+	        fieldState.tetrinos = tetrinos.map(function (tetrino) {
+	          if (tetrino.id === id) {
+	            return tetrinoState;
+	          }
+	          return tetrino;
 	        });
-	        fieldState.fieldArray = fieldArray;
 	      }
+	
 	      return fieldState;
 	    };
 	  })));
@@ -38553,7 +38559,9 @@
 	  value: true
 	});
 	exports["default"] = {
-	  SCALE: 20
+	  SCALE: 20,
+	  H: 20,
+	  W: 5
 	};
 	module.exports = exports["default"];
 

@@ -7,16 +7,18 @@ const shapeDef = {
   'i': [[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]]
 };
 
-const initialValue = {
-  position: { x: 0, y: 0},
-  previous: false,
-  atBottom: false,
-  id: uuid.v4(),
-  color: 'blue',
-  type: shapeDef.i
-};
+function createTetrino() {
+  return {
+    id: uuid.v4(),
+    position: { x: 0, y: 0},
+    previous: false,
+    atBottom: false,
+    color: 'blue',
+    type: shapeDef.i
+  };
+}
 
-export default Store(initialValue)
+export default Store(createTetrino())
   .refs({ displayName: 'TetrinoStore' })
   .init(({ instance, args }) => {
     const [tetrisCat] = args;
@@ -29,7 +31,7 @@ export default Store(initialValue)
 
     instance.register(transformer(tetrinoActions.createTetrino.map(() => {
       return () => {
-        return initialValue;
+        return createTetrino();
       };
     })));
 
